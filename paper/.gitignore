@@ -1,5 +1,19 @@
-*~
+# Latex
 *.aux
-*.dvi
+*.bbl
+*.blg
+*.brf
 *.log
-*.pdf
+*.out
+dr17binaries.pdf
+*.synctex.gz*
+*Notes.bib
+*.png
+gitstuff.tex
+*.fdb_latexmk
+*.fls
+submit
+*.fits
+*.zip
+arxiv
+*~
