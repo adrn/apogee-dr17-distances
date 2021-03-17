@@ -56,7 +56,7 @@
 \author{others}
 \affil{elsewhere}
 
-\begin{abstract}
+\begin{abstract}\noindent
 The \ESA{} \Gaia{} Mission has delivered an enormous amount of nearly
 model-independent, geometric stellar distance information in the form
 of parallax measurements.
@@ -92,13 +92,75 @@ Hello World
 
 \section{Model assumptions and requirements}
 
+\begin{description}
+\item[no physics] We use only geometry and data science, no stellar physics
+  of any kind. These are purely geometric distances. This might be slightly
+  violated if we select on $\log g$.
+\item[\Gaia{} likelihood function] We use the \ESA{} \Gaia{}
+  recommended likelihood function, which is a responsible (though obviously
+  approximate) representation of the probability of the data given the
+  parallaxes.
+\item[use all parallaxes] If you train a model using only the positive
+  parallaxes, or only the high-SNR parallaxes, you will get a biased model,
+  especially near that cut. We never will do this abomination, unlike the
+  other, similar projects out there!
+\item[simple model] We are linear, under the hood, because linear is good enough,
+  linear permits uncertainty propagation, and linear is interpretable. Don't use
+  a 42-layer RELU network unless you need to, people!
+\item[log space] Colors and magnitudes predict distance moduli and
+  dust attenuations. So we do everything in log space, inside the
+  model.
+\item[good spectra and photometry] We assume that the features we use are
+  good. This means that the spectral and photometric data are high enough in
+  signal-to-noise that they don't mess up our regression.
+\item[no spectral information at high resolution] The \APOGEE{} Spectrographs
+  have spectral resolution around 22500. We don't permit the model to have any
+  support at spectral resolutions higher than this.
+\item[outliers] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
+\item[train-and-test] We don't ever self-test. That is, when a prediction is
+  made for the parallax for star $n$, we never use model coefficients trained
+  using, in any way, the data from star $n$.
+  This ensures that, while the distances are geometric in origin, each star's
+  spectrophotometric distance is created
+  independently of the information we have directly on that star's
+  geometric distance.
+\end{description}
+
 \section{Data and pre-processing}
 
+\APOGEE{} data release and subsample.
+
+Continuum normalization, patching of missing data, low-pass filtering.
+
+Combined-spectrum LSF information.
+
+\ESA{} \Gaia{} data release, archive query, and cross matches.
+
+Full contents of the rectangular feature matrix $X$.
+
 \section{Method}
+
+We do the correct method, given the assumptions listed above.
+
+Aside from decisions made in the reading and munging of the data, the
+only hyper-choices are: \Gaia{} parallax zeropoint, ridge parameter
+$\lambda$, and number of train--test folds (2).
 
 \section{Results and Validation}
 
 \section{Discussion}
+
+Summarize what we did and got.
+
+Show a teaser of what science is now possible.
+
+Discuss our assumptions and what it would mean to go beyond.
+
+Discuss our hyper-parameter choices and results.
+
+Discuss what happens if we drop to a purely photometric model.
+
+Interpret?
 
 \begin{acknowledgements}
 It is a pleasure to thank Soledad Villar (JHU) for valuable input.
