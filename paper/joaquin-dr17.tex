@@ -11,17 +11,12 @@
 \usepackage[utf8]{inputenc}
 \usepackage{amsmath, amsfonts}
 
-% typography
-\setlength{\topmargin}{-0.50in}
-\setlength{\headsep}{4ex}
-\setlength{\textheight}{9.30in}
-\setlength{\oddsidemargin}{0.5in}
-\setlength{\textwidth}{5.50in}
+% page layout and other typography
+\addtolength{\topmargin}{-0.25in}
+\addtolength{\textheight}{0.5in}
 \setlength{\parindent}{0.18in}
-\newlength{\figurewidth}
-\setlength{\figurewidth}{0.94\textwidth}
-\setlength{\textfloatsep}{1ex}
-\setlength{\floatsep}{1ex}
+\shorttitle{joaquin: simple spectrophotometric distances}
+\shortauthors{price-whelan, hogg, eilers, rix}
 \frenchspacing\sloppy\sloppypar\raggedbottom
 
 % text shih
@@ -123,7 +118,9 @@ Hello World
   This ensures that, while the distances are geometric in origin, each star's
   spectrophotometric distance is created
   independently of the information we have directly on that star's
-  geometric distance.
+  geometric distance. This, in turn, means that the spectrophotometric distances
+  we provide can be combined with the \Gaia{} parallax information to de-noise
+  the \Gaia{} data in a statistically safe way.
 \end{description}
 
 \section{Data and pre-processing}
