@@ -27,6 +27,8 @@
 \newcommand{\ESA}{\acronym{ESA}}
 \newcommand{\Gaia}{\project{Gaia}}
 \newcommand{\APOGEE}{\project{\acronym{APOGEE-2}}}
+\newcommand{\SDSSIV}{\project{\acronym{SDSS-IV}}}
+\newcommand{\SDSSV}{\project{\acronym{SDSS-V}}}
 
 % math shih
 \newcommand{\given}{\,|\,}
@@ -83,7 +85,55 @@ stage, these distances are effectively purely geometric in origin.
 
 \section{Introduction}\label{sec:intro}
 
-Hello World
+Enormous spectroscopic projects such as \SDSSV{} (CITE)
+and ??? (CITE)
+are in the process of delivering spectra of millions of stars.
+These spectra provide radial velocities, stellar parameters, and element-abundance
+measurements.
+If we want to map the Milky Way, we need also \emph{distances} to these stars.
+We might rely on the ESA \Gaia{} Mission (CITE) to deliver distances, as it measures
+geometric parallaxes for more than a billion sources.
+These distances, being purely geometric in origin, are extremely reliable
+and are inferred with very few fundamental assumptions.
+However, they are only precise in the Solar neighborhood.
+
+Fortunately, stars show extremely strong regularities across their observable
+properties of radius, temperature, and abundances.
+Although stars evolve in all these properties, they do so accoridng to very
+precise rules.
+Physical (theoretical and theory-driven) models do an excellent job of predicting
+this stellar evolution, although with some systematic offsets and distortions.
+It is possible to use physical models and stellar spectroscopic observations
+jointly to infer stellar distances with good precision---but perhaps limited
+accuracy---this is part of the plans of many contemporary projects.
+The accuracy of such theory-driven spectroscopic distances is limited by the
+wrongnesses and approximations of the physical models, and their use involves
+commitment to a baroque set of physical assumptions.
+
+Fortunately, once data sets are large, it is possible to obtain stellar distances
+that benefit from the simplicity and reliability of geometric distances, and
+capitalize on the regularity of stellar evolution, without taking on any assumptions
+whatsoever about stellar physics, stellar evolution, or atomic physics.
+The idea is to train a discriminative regression that predicts the geometric
+distance using the spectroscopy as features.
+That's what we do here.
+The distances we produce are completely geometric in origin, even though they
+are inferred using spectral and photometric data.
+
+This project is a descendent of a previous spectrophotometric parallax project
+(CITE).
+It inherits many of the good properties of that prior project:
+We use a justified likelihood function for the \Gaia\ data,
+the model is extremely simple (nearly linear),
+the stellar distances are trained on the \Gaia\ data but no star obtains
+any distance information from its own \Gaia\ observation (all information
+comes from other stars),
+and there is no use of physical models.
+Here we extend the project in a number of directions that make the results
+more useful:
+We do the whole H--R diagram, splitting the data up by spectral similarity.
+We use \Gaia{} \acronym{EDR3}, which is better.
+We have refined the regularization of the model to avoid over-fitting.
 
 \section{Model assumptions and requirements}
 
@@ -111,7 +161,8 @@ Hello World
 \item[no spectral information at high resolution] The \APOGEE{} Spectrographs
   have spectral resolution around 22500. We don't permit the model to have any
   support at spectral resolutions higher than this.
-\item[outliers] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
+\item[outliers and binaries] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
+\item[spectral neighbors]
 \item[train-and-test] We don't ever self-test. That is, when a prediction is
   made for the parallax for star $n$, we never use model coefficients trained
   using, in any way, the data from star $n$.
@@ -123,7 +174,7 @@ Hello World
   the \Gaia{} data in a statistically safe way.
 \end{description}
 
-\section{Data and pre-processing}
+\section{Data}
 
 \APOGEE{} data release and subsample.
 
@@ -135,7 +186,21 @@ Combined-spectrum LSF information.
 
 Full contents of the rectangular feature matrix $X$.
 
-\section{Method}
+\section{Spectral neighborhoods}
+
+How do we find 
+
+\section{Spectral neighborhoods}
+
+How to choose control points?
+
+How to define the larger neighborhood? K nearest neighbors to each control point? Note, each star is used in many neighborhoods.
+
+How to choose which neighborhood assigns the distance? Nearest center? Note that each star has only one neighborhood from which it gets assigned a distance.
+
+We need consistent terminology.
+
+\section{Distance estimation}
 
 We do the correct method, given the assumptions listed above.
 
