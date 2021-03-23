@@ -149,6 +149,8 @@ We have refined the regularization of the model to avoid over-fitting.
   parallaxes, or only the high-SNR parallaxes, you will get a biased model,
   especially near that cut. We never will do this abomination, unlike the
   other, similar projects out there!
+\item[spectral neighbors] Stars that have similar spectra will be similar in
+  their intrinsic physical properties.
 \item[simple model] We are linear, under the hood, because linear is good enough,
   linear permits uncertainty propagation, and linear is interpretable. Don't use
   a 42-layer RELU network unless you need to, people!
@@ -162,7 +164,6 @@ We have refined the regularization of the model to avoid over-fitting.
   have spectral resolution around 22500. We don't permit the model to have any
   support at spectral resolutions higher than this.
 \item[outliers and binaries] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
-\item[spectral neighbors]
 \item[train-and-test] We don't ever self-test. That is, when a prediction is
   made for the parallax for star $n$, we never use model coefficients trained
   using, in any way, the data from star $n$.
