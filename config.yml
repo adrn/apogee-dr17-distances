@@ -7,8 +7,12 @@
 ## Output path to store cache files and data products:
 output_path: /mnt/ceph/users/apricewhelan/projects/apogee-dr17-distances/output
 
-## Root path to cached APOGEE data
-apogee_cache_path: /mnt/ceph/users/apricewhelan/apogee/dr17
+## Root path to cached APOGEE data:
+apogee_cache_path: /mnt/ceph/users/apricewhelan/apogee/
+
+## APOGEE-specific quantities:
+apogee_dr: dr17
+apogee_reduction: dr17
 
 ## Photometry used by Joaquin to train on / predict parallaxes:
 phot_names:
@@ -42,3 +46,6 @@ Kfold_K: 4
 
 ## Number of PCA components to use to patch the missing spectral pixels:
 patching_pca_components: 8
+
+## Random number seed
+seed: 42
