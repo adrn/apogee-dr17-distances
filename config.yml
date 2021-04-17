@@ -27,7 +27,7 @@ phot_names:
 
 ## Photometric colors used in to construct neighborhoods of similar stars:
 neighborhood_color_names:
-  - [phot_bp_mean_mag, phot_rp_mean_mag']
+  - [phot_bp_mean_mag, phot_rp_mean_mag]
   - [phot_rp_mean_mag, w1mpro]
   - [H, w2mpro]
   - [w1mpro, w2mpro]
@@ -48,4 +48,4 @@ Kfold_K: 4
 patching_pca_components: 8
 
 ## Random number seed
-seed: 42
+seed: null
