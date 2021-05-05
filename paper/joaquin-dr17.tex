@@ -17,13 +17,15 @@
 % page layout and other typography
 \addtolength{\topmargin}{-0.25in}
 \addtolength{\textheight}{0.5in}
-\setlength{\parindent}{0.18in}
+\setlength{\parindent}{0.20in}
 \shorttitle{joaquin: spectrophotometric distances and standard candles}
 \shortauthors{price-whelan, hogg, et al}
 \renewcommand{\twocolumngrid}{}
 \frenchspacing\sloppy\sloppypar\raggedbottom
 
 % text shih
+\newcommand{\documentname}{\textsl{Article}}
+\newcommand{\sectionname}{Section}
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\project}[1]{\textsl{#1}}
 \newcommand{\joaquin}{\project{joaquin}}
@@ -144,6 +146,21 @@ We do the whole H--R diagram, splitting the data up by spectral similarity.
 We use \Gaia{} \acronym{EDR3}, which is more accurate and more precise.
 We have refined the regularization of the model to avoid over-fitting, or to prevent
 the model from making use of noise-generated features in the spectroscopy.
+
+When we make these improvements, we find that the distance estimates improve
+\emph{dramatically}.
+Where our previous work was getting 9-ish percent distances, here (below) we
+get 3-ish percent distances.
+We don't understand in detail all of the reasons for the improvement, but the
+distances we present here are substantially better---according to our
+cross-validation estimates of predictive accuracy---than any other spectrophotometric
+distances obtained with similar data on similar stars (see, eg, \citealt{foo, bar}).
+Indeed, our distances are even better than the precision of some standard candles,
+for example red-clump stars (see, eg, \citealt{whatever}).
+For these reasons, this project can be seen as delivering new classes of standard
+(or standardizable) candles.
+These, in turn, will permit precise mapping of large parts of the Milky Way.
+We will show one such map below, in \sectionname~\ref{sec:whatever}.
 
 \section{Model assumptions and requirements}\label{sec:assumptions}
 
