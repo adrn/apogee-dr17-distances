@@ -37,6 +37,7 @@
 \newcommand{\APOGEE}{\project{\acronym{APOGEE-2}}}
 \newcommand{\SDSSIV}{\project{\acronym{SDSS-IV}}}
 \newcommand{\SDSSV}{\project{\acronym{SDSS-V}}}
+\newcommand{\code}[1]{\texttt{#1}}
 
 % math shih
 \newcommand{\given}{\,|\,}
@@ -123,7 +124,7 @@ The accuracy of such theory-driven spectroscopic distances is limited by the
 wrongnesses and approximations of the physical models, and their use involves
 commitments to a baroque set of physical assumptions.
 
-Fortunately, once data sets are large, it is possible to obtain stellar distances
+Once data sets are large, it is possible to obtain stellar distances
 that benefit from the simplicity and reliability of geometric distances, and
 capitalize on the regularity of stellar evolution, without taking on any assumptions
 whatsoever about stellar physics, stellar evolution, or atomic physics.
@@ -152,7 +153,7 @@ the model from making use of noise-generated features in the spectroscopy.
 When we make these improvements, we find that the distance estimates improve
 \emph{dramatically}.
 Where our previous work was getting 9-ish percent distances, here (below) we
-get 3-ish percent distances.
+get 3-ish percent distances for some kinds of stars.
 We don't understand in detail all of the reasons for the improvement, but the
 distances we present here are substantially better---according to our
 cross-validation estimates of predictive accuracy---than any other spectrophotometric
@@ -191,8 +192,9 @@ assumptions or requirements, the model and all procedures will flow naturally fr
   good. This means that the spectral and photometric data are high enough in
   signal-to-noise that they don't mess up our regression.
 \item[no spectral information at high resolution] The \APOGEE{} Spectrographs
-  have spectral resolution around 22500. We don't permit the model to have any
-  support at spectral resolutions higher than this.
+  have spectral resolution around 22500. We filter the input spectral data
+  to prohibit the model from having any support at spectral resolutions higher
+  than this.
 \item[outliers and binaries] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
 \item[train-and-test] We don't ever self-test. That is, when a prediction is
   made for the parallax for star $n$, we never use model coefficients trained
@@ -207,9 +209,28 @@ assumptions or requirements, the model and all procedures will flow naturally fr
 
 \section{Data}
 
-\APOGEE{} data release and subsample.
+Photometric data from Gaia, 2MASS, WISE. Selections here? Matching done by
+the ESA Gaia Archive, maybe?
 
-Continuum normalization, patching of missing data, low-pass filtering.
+\APOGEE{} data release and subsample; match to the photometry?
+
+Continuum normalization, patching of missing data.
+
+For reasons that relate to regularization and control of over-fitting (discussed
+at more length in location XXX), we low-pass filter the stellar spectra.
+The idea is that the \APOGEE{} spectrographs work at resolution 22,500, so there
+can't be spectral information at smaller scales (higher resolutions) than this.
+To perform this filtering, we apply a non-uniform fast Fourier transform (using
+the \code{nufft} package; \citealt{nufft}) to the spectral data.
+For the location or position axis for the Fourier transform,
+we choose the logarithm of the wavelength (because fixed spectral resolution
+corresponds to a fixed interval in log wavelength).
+We use a non-uniform Fourier transform because the \APOGEE{} instruments have
+wavelength gaps.
+We zero out Fourier modes that correspond to signals at resolutions higher than
+22,500, and then Fourier transform back to real space.
+These filtered spectra are what we use as the spectral data in this project.
+An example of the low-pass filtering is shown in \figurename~\ref{fig:filtering}.
 
 Combined-spectrum LSF information.
 
