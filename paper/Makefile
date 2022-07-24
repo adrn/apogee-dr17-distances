@@ -9,9 +9,9 @@ all: ${NAME}.pdf
 
 ${NAME}.pdf: ${NAME}.tex # refs.bib
 	${LATEX} ${NAME}.tex
-# 	bibtex ${NAME}
-#	${LATEX} ${NAME}.tex
-#	${LATEX} ${NAME}.tex
+	bibtex ${NAME}
+	${LATEX} ${NAME}.tex
+	${LATEX} ${NAME}.tex
 	( ${CHECK_RERUN} ${NAME}.log && ${LATEX} ${NAME} ) || echo "Done."
 	( ${CHECK_RERUN} ${NAME}.log && ${LATEX} ${NAME} ) || echo "Done."
 

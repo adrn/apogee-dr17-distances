@@ -17,12 +17,15 @@
 % page layout and other typography
 \addtolength{\topmargin}{-0.25in}
 \addtolength{\textheight}{0.5in}
-\setlength{\parindent}{0.18in}
-\shorttitle{joaquin: simple spectrophotometric distances}
-\shortauthors{price-whelan, hogg, eilers, rix}
+\setlength{\parindent}{0.20in}
+\shorttitle{joaquin: spectrophotometric distances and standard candles}
+\shortauthors{price-whelan, hogg, et al}
+\renewcommand{\twocolumngrid}{}
 \frenchspacing\sloppy\sloppypar\raggedbottom
 
 % text shih
+\newcommand{\documentname}{\textsl{Article}}
+\newcommand{\sectionname}{Section}
 \newcommand{\acronym}[1]{{\small{#1}}}
 \newcommand{\project}[1]{\textsl{#1}}
 \newcommand{\joaquin}{\project{joaquin}}
@@ -32,34 +35,35 @@
 \newcommand{\APOGEE}{\project{\acronym{APOGEE-2}}}
 \newcommand{\SDSSIV}{\project{\acronym{SDSS-IV}}}
 \newcommand{\SDSSV}{\project{\acronym{SDSS-V}}}
+\newcommand{\code}[1]{\texttt{#1}}
 
 % math shih
 \newcommand{\given}{\,|\,}
 
 \begin{document}
 
-\title{\joaquin{}: Simple data-driven spectrophotometric distances for \APOGEE{} stars, trained on \ESA{} \Gaia{} data}
+\title{\joaquin{}: Data-driven spectrophotometric distances for stars and
+  percent-level standard candles on the red-giant branch}
 
-\author{AMPW}
-\affil{Flatiron}
+\author{Adrian M. Price-Whelan}
+\affil{Flatiron Institute, a division of the Simons Foundation}
 
-\author{DWH}
-\affil{Flatiron}
-\affil{MPIA}
+\author[0000-0003-2866-9403]{David W. Hogg}
+\affil{Flatiron Institute, a division of the Simons Foundation}
+\affil{Max-Planck-Institut f\"ur Astronomie}
+\affil{Center for Cosmology and Particle Physics, Department of Physics, New~York~University}
 
-\author{ACE}
-\affil{MIT}
+\author{Anna-Christina Eilers}
+\affil{Kavli Institute for Astrophysics and Space Research, Massachusetts Institute of Technology}
 
-\author{HWR}
-\affil{MPIA}
+\author{Hans-Walter Rix}
+\affil{Max-Planck-Institut f\"ur Astronomie}
 
 \author{others}
 \affil{elsewhere}
 
 \begin{abstract}\noindent
-The \ESA{} \Gaia{} Mission has delivered an enormous amount of nearly
-model-independent, geometric stellar distance information in the form
-of parallax measurements.
+The \ESA{} \Gaia{} Mission has delivered an enormous amount of geometric stellar distance information in the form of parallax measurements.
 Current stellar spectroscopic and photometric surveys deliver
 good information about stars much more distant than those for which
 parallaxes are precise.
@@ -75,45 +79,50 @@ dominate the information for luminous stars, and which must be deleted
 in most other approaches.
 The training includes a prior that forbids it from using spectral
 information beyond the resolution of the \APOGEE{} spectrographs,
-and a train/test split that ensures that no star's distance prediction
+and a k-fold train/test split that ensures that no star's distance prediction
 involves any training data coming from that same star.
 We obtain and deliver a catalog of YYY distances and formal uncertainties.
 We show the results of validation tests using ZZZ and WWW.
-We find that the distances are not biased by more than VVV.
-Because the model does not make any use of stellar models at any
-stage, these distances are effectively purely geometric in origin.
+We find that the distances are not biased by more than VVV, and have uncertainties
+in the range of TTT to SSS percent.
+The most accurately predicted distances are for stars IN RANGE UUU; these stars
+are more precisely standardizable candles than red-clump stars, and far more numerous
+than RR Lyrae.
 \end{abstract}
 
 \keywords{foo --- bar}
 
+\section*{~}
+\clearpage
 \section{Introduction}\label{sec:intro}
 
-Enormous spectroscopic projects such as \SDSSV{} (CITE)
+Enormous spectroscopic projects such as \SDSSV{} (\citealt{sdssv})
 and ??? (CITE)
 are in the process of delivering spectra of millions of stars.
 These spectra provide radial velocities, stellar parameters, and element-abundance
 measurements.
 If we want to map the Milky Way, we need also \emph{distances} to these stars.
-We might rely on the ESA \Gaia{} Mission (CITE) to deliver distances, as it measures
+We might rely on the ESA \Gaia{} Mission (\citealt{gaia}) to deliver distances, as it measures
 geometric parallaxes for more than a billion sources.
-These distances, being purely geometric in origin, are extremely reliable
+These measurements, being purely geometric in origin, are extremely reliable
 and are inferred with very few fundamental assumptions.
-However, they are only precise in the Solar neighborhood.
+However, they are only precise in the Solar neighborhood (within $\sim$kpc of the Sun).
 
-Fortunately, stars show extremely strong regularities across their observable
+Fortunately, stars show extremely strong regularities across their measurable
 properties of radius, temperature, and abundances.
-Although stars evolve in all these properties, they do so accoridng to very
+Although stars evolve in all these properties, they do so according to very
 precise rules.
 Physical (theoretical and theory-driven) models do an excellent job of predicting
 this stellar evolution, although with some systematic offsets and distortions.
 It is possible to use physical models and stellar spectroscopic observations
 jointly to infer stellar distances with good precision---but perhaps limited
-accuracy---this is part of the plans of many contemporary projects.
+accuracy---this is part of the plans of many contemporary projects, including even
+the spectroscopic parts of the \Gaia{} Mission (CITECU8maybe).
 The accuracy of such theory-driven spectroscopic distances is limited by the
 wrongnesses and approximations of the physical models, and their use involves
-commitment to a baroque set of physical assumptions.
+commitments to a baroque set of physical assumptions.
 
-Fortunately, once data sets are large, it is possible to obtain stellar distances
+Once data sets are large, it is possible to obtain stellar distances
 that benefit from the simplicity and reliability of geometric distances, and
 capitalize on the regularity of stellar evolution, without taking on any assumptions
 whatsoever about stellar physics, stellar evolution, or atomic physics.
@@ -124,7 +133,7 @@ The distances we produce are completely geometric in origin, even though they
 are inferred using spectral and photometric data.
 
 This project is a descendent of a previous spectrophotometric parallax project
-(CITE).
+(\citealt{her}).
 It inherits many of the good properties of that prior project:
 We use a justified likelihood function for the \Gaia\ data,
 the model is extremely simple (nearly linear),
@@ -135,13 +144,31 @@ and there is no use of physical models.
 Here we extend the project in a number of directions that make the results
 more useful:
 We do the whole H--R diagram, splitting the data up by spectral similarity.
-We use \Gaia{} \acronym{EDR3}, which is better.
-We have refined the regularization of the model to avoid over-fitting.
+We use \Gaia{} \acronym{EDR3}, which is more accurate and more precise.
+We have refined the regularization of the model to avoid over-fitting, or to prevent
+the model from making use of noise-generated features in the spectroscopy.
 
-\section{Model assumptions and requirements}
+When we make these improvements, we find that the distance estimates improve
+\emph{dramatically}.
+Where our previous work was getting 9-ish percent distances, here (below) we
+get 3-ish percent distances for some kinds of stars.
+We don't understand in detail all of the reasons for the improvement, but the
+distances we present here are substantially better---according to our
+cross-validation estimates of predictive accuracy---than any other spectrophotometric
+distances obtained with similar data on similar stars (see, eg, \citealt{foo, bar}).
+Indeed, our distances are even better than the precision of some standard candles,
+for example red-clump stars (see, eg, \citealt{whatever}).
+For these reasons, this project can be seen as delivering new classes of standard
+(or standardizable) candles.
+These, in turn, will permit precise mapping of large parts of the Milky Way.
+We will show one such map below, in \sectionname~\ref{sec:whatever}.
 
+\section{Model assumptions and requirements}\label{sec:assumptions}
+
+The attitude we take here is that, once we write down a sufficiently comprehensive set of
+assumptions or requirements, the model and all procedures will flow naturally from that list of assumptions.
 \begin{description}
-\item[no physics] We use only geometry and data science, no stellar physics
+\item[no gastrophysics] We use only geometry and data science, no stellar physics
   of any kind. These are purely geometric distances. This might be slightly
   violated if we select on $\log g$.
 \item[\Gaia{} likelihood function] We use the \ESA{} \Gaia{}
@@ -152,20 +179,20 @@ We have refined the regularization of the model to avoid over-fitting.
   parallaxes, or only the high-SNR parallaxes, you will get a biased model,
   especially near that cut. We never will do this abomination, unlike the
   other, similar projects out there!
-\item[spectral neighbors] Stars that have similar spectra will be similar in
+\item[spectral neighbors] Stars that have similar (pseudo-continuum-normalized) spectra and colors will be similar in
   their intrinsic physical properties.
 \item[simple model] We are linear, under the hood, because linear is good enough,
-  linear permits uncertainty propagation, and linear is interpretable. Don't use
+  linear permits uncertainty propagation, and linear is (potentially) interpretable. Don't use
   a 42-layer RELU network unless you need to, people!
-\item[log space] Colors and magnitudes predict distance moduli and
-  dust attenuations. So we do everything in log space, inside the
-  model.
+\item[log space] Colors and magnitudes are good for making simple predictions of distance moduli and
+  dust attenuations. So we do everything in log space, inside the model.
 \item[good spectra and photometry] We assume that the features we use are
   good. This means that the spectral and photometric data are high enough in
   signal-to-noise that they don't mess up our regression.
 \item[no spectral information at high resolution] The \APOGEE{} Spectrographs
-  have spectral resolution around 22500. We don't permit the model to have any
-  support at spectral resolutions higher than this.
+  have spectral resolution around 22500. We filter the input spectral data
+  to prohibit the model from having any support at spectral resolutions higher
+  than this.
 \item[outliers and binaries] WHAT OUTLIERS DO WE REMOVE, and WHY DOESN'T THIS BIAS US?
 \item[train-and-test] We don't ever self-test. That is, when a prediction is
   made for the parallax for star $n$, we never use model coefficients trained
@@ -180,9 +207,28 @@ We have refined the regularization of the model to avoid over-fitting.
 
 \section{Data}
 
-\APOGEE{} data release and subsample.
+Photometric data from Gaia, 2MASS, WISE. Selections here? Matching done by
+the ESA Gaia Archive, maybe?
 
-Continuum normalization, patching of missing data, low-pass filtering.
+\APOGEE{} data release and subsample; match to the photometry?
+
+Continuum normalization, patching of missing data.
+
+For reasons that relate to regularization and control of over-fitting (discussed
+at more length in location XXX), we low-pass filter the stellar spectra.
+The idea is that the \APOGEE{} spectrographs work at resolution 22,500, so there
+can't be spectral information at smaller scales (higher resolutions) than this.
+To perform this filtering, we apply a non-uniform fast Fourier transform (using
+the \code{nufft} package; \citealt{nufft}) to the spectral data.
+For the location or position axis for the Fourier transform,
+we choose the logarithm of the wavelength (because fixed spectral resolution
+corresponds to a fixed interval in log wavelength).
+We use a non-uniform Fourier transform because the \APOGEE{} instruments have
+wavelength gaps.
+We zero out Fourier modes that correspond to signals at resolutions higher than
+22,500, and then Fourier transform back to real space.
+These filtered spectra are what we use as the spectral data in this project.
+An example of the low-pass filtering is shown in \figurename~\ref{fig:filtering}.
 
 Combined-spectrum LSF information.
 
@@ -190,13 +236,19 @@ Combined-spectrum LSF information.
 
 Removal of obv outliers?
 
+Constitution of the training sample, and of the parent sample. Figures illustrating those.
+
 \section{Spectral neighborhoods}
 
-How to choose control points?
+How to make spectrophotometric basis vectors and how to project into that space?
 
-How to define the larger neighborhood? K nearest neighbors to each control point? Note, each star is used in many neighborhoods.
+Technical matters about kdtree etc?
 
-How to choose which neighborhood assigns the distance? Nearest center? Note that each star has only one neighborhood from which it gets assigned a distance.
+How to choose control points / stoops?
+
+How to define the larger neighborhood and set the hyper-parameters for that neighborhood? Note: each star is used in multiple neighborhoods.
+
+How to choose which neighborhood assigns the distance? Nearest center? Note that each star has only one neighborhood from which it gets assigned a distance, in the end.
 
 We need consistent terminology.
 
@@ -216,22 +268,38 @@ $\lambda$, and number of train--test folds (2).
 
 \section{Results and Validation}
 
+Use some robust variance modeling to show that our results have such-and-such precision in ln space.
+
+Show plots of this as a function of location in the HRD, and in comparison to various bits of housekeeping data a la the QC plots generated by joaquin.
+
+Look at 
+
 \section{Discussion}
 
 Summarize what we did and got.
 
 Show a teaser of what science is now possible.
 
+Compare the pros and cons of these kinds of distance tracers relative
+to RC stars and RRLs and others (Cepheids? Turn-off? TRGB? HB?)
+
 Discuss our assumptions and what it would mean to go beyond.
 
 Discuss our hyper-parameter choices and results.
 
-Discuss what happens if we drop to a purely photometric model.
+Discuss what happens if we drop to a purely photometric model?
 
-Interpret?
+What happens if we turn off the low-pass filtering? What gets worse and what goes wrong?
+
+Interpret the amplitudes? This is a fool's errand. But we could compare to derivatives that Andy Casey could give us.
+
+Why didn't we just turn on a 42-layer RELU network? There literally is a RELU network that would reproduce our choices, because RELU is piecewise linear!
 
 \begin{acknowledgements}
 It is a pleasure to thank Soledad Villar (JHU) for valuable input.
 \end{acknowledgements}
+
+\bibliographystyle{aasjournal}
+\bibliography{j}
 
 \end{document}
